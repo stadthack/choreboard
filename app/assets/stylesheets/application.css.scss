@@ -78,6 +78,38 @@ a {
 .modal-body {
   -webkit-flex:1;
   max-height:none;
+  display: -webkit-flex;
+  -webkit-flex-direction: column;
+
+  .task-detail-reward {
+    -webkit-flex:1;
+  }
+  
+  .task-detail-author {
+    border-top: 0 none;
+    box-shadow: none;
+    padding: 0;
+    background: rgba(255,255,255,0.05);
+    display: -webkit-flex;
+    -webkit-flex-direction: row;
+    text-align: left;
+    a {
+      -webkit-flex:1;
+    }
+  }
+  .task-detail-date {
+    border-top: 0 none; 
+    box-shadow: none;
+    padding: 0;
+    background: rgba(255,255,255,0.05);
+    display: -webkit-flex;
+    -webkit-flex-direction: row;
+    text-align: left;
+    a {
+      -webkit-flex:1;
+    }
+  }
+
 }
 .modal-footer {
   border-top: 0 none;
@@ -198,6 +230,19 @@ a {
     background: #000;
     border-color: transparent;
     color: $brand;
+  }
+
+}
+
+.task-detail-reward {
+  text-align: center;
+
+  .task-reward {
+    display: inline-block;
+    font-size: 150px; 
+    height: 200px;
+    width: 200px; 
+    line-height: 200px - 2 * 8px;
   }
 }
 
