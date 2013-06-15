@@ -1,7 +1,13 @@
 app.controller "MainCtrl", @MainCtrl = ($scope, $http, $route, $routeParams, $location, $log) ->
   $scope.location = $location
   $scope.routeParams = $routeParams
-  $scope.completionModal = true
+  $scope.completionModal = false
+  
+  $scope.scores = [
+    { label: "Marcel", value: 20 }
+    { label: "Colin", value: 40 }
+    { label: "Moritz", value: 30 }
+  ]
   
   $scope.validate = (form) ->
     return false unless form?
