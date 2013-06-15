@@ -1,0 +1,246 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ *= require _font-awesome
+ */
+
+$bodyBackground: #000;
+$textColor: #ddd;
+$baseFontSize: 48px;
+$baseLineHeight: 64px;
+$alternativeTextColor: #483;
+$brand: #cd3;
+
+@import "bootstrap";
+
+html, body, .page {
+  height: 100%;
+}
+
+body {
+  background: #000 url(https://raw.github.com/subtlepatterns/SubtlePatterns/master/stressed_linen.png);
+  background: #000 url(https://raw.github.com/subtlepatterns/SubtlePatterns/master/type.png);
+
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  
+  &:hover {
+    color: #fff;
+    text-decoration: none;
+    background: rgba(255,255,255,0.05);
+    border-top-color: #111;
+    border-bottom-color: #333;
+  }
+  
+  &:active {
+    background: -webkit-linear-gradient(top, $alternativeTextColor, $brand, $alternativeTextColor);
+    color: #000;
+  }
+}
+
+.modal {
+  top: 10vh;
+  bottom: 10vh;
+  left: 5vw;
+  right: 5vw;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  width: auto;
+  height: auto;
+  
+  display: -webkit-flex;
+  -webkit-flex-direction: column;
+}
+
+.modal-title {
+  background: #333;
+  color: #000;
+}
+
+.scoreboard {
+  background: #aaa;
+  -webkit-flex: 0 0 25%;
+  border-bottom: 2px solid #888;
+}
+
+.page {
+  display: -webkit-flex;
+  -webkit-flex-direction: column;
+  font-family: 'Patrick Hand SC', cursive;
+}
+
+.statusbar {
+  background: #080808;
+  color: #fff;
+  text-align: right;
+  padding: 0 2vw;
+  line-height: 48px;
+  font-size: 32px;
+}
+
+.tasks-latest, .tasks-upcoming {
+  -webkit-flex: 1;
+  overflow: auto;
+  display: -webkit-flex;
+  -webkit-flex-direction: column;
+  -webkit-align-items: stretch;
+}
+
+.tasks .task {
+  padding: 1vh 2vw;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #111;
+  display: -webkit-flex;
+  line-height: 64px;
+  font-size: 48px;
+  overflow-x: hidden;
+  max-width: 100%;
+  
+  &:first-child {
+    border-top-color: transparent;
+  }
+  
+  &:last-child {
+    border-bottom-color: transparent;
+  }
+}
+
+.task-icon {
+  display: block;
+  width: 64px;
+  height: 64px;
+  background: #bbb;
+  border-radius: 100%;
+  text-align: center;
+  border: 4px solid #888;
+  color: #888;
+  line-height: ($baseLineHeight - 2 * 4px);
+  box-sizing: border-box;
+  font-size: 32px;
+  
+  a:active & {
+    background: transparent; 
+    border-color: #000;
+    color: #000;
+  }
+}
+
+.task-text {
+  -webkit-flex: 1 100;
+  line-height: 1;
+  padding: (($baseLineHeight - $baseFontSize) / 2) 2vw;
+}
+
+.task-author {
+  padding: 0 2vw;
+}
+
+.task-author {
+  white-space: nowrap;
+ 
+  .by {
+    opacity: 0.5;
+    font-size: 32px;
+  } 
+}
+
+.task-reward {
+  display: block;
+  background: $brand;
+  border-radius: 100%;
+  width: $baseLineHeight;
+  height: $baseLineHeight;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  -webkit-transform: rotate(-15deg);
+  color: $alternativeTextColor;
+  border: 8px dotted $alternativeTextColor;
+  box-sizing: border-box;
+  line-height: ($baseLineHeight - 2 * 8px);
+  
+  a:active & {
+    background: #000;
+    border-color: transparent;
+    color: $brand;
+  }
+}
+
+.task-headline {
+  display: block;
+  background: #fff;
+  margin: 0 auto;
+  border-left: 5px solid $brand;
+  border-right: 5px solid $brand;
+  text-align: center;
+  line-height: 64px;
+  white-space: nowrap;
+  background: $brand;
+  color: $alternativeTextColor;
+}
+
+.more-tasks {
+  text-align: center;
+  box-shadow: 1px 1px #333, inset 1px 1px #333;
+  border-radius: $baseLineHeight;
+  border: 1px solid #111;
+  padding: 0 $baseLineHeight;
+  -webkit-align-self: center;
+}
+
+.tasks-latest {
+  $latestTaskLineHeight: $baseLineHeight * 0.75;
+  
+  .task {
+    font-size: $baseFontSize * 0.75;
+    line-height: $latestTaskLineHeight;
+  }
+  
+  .task-icon {
+    width: $latestTaskLineHeight;
+    height: $latestTaskLineHeight;
+    line-height: ($latestTaskLineHeight - 2 * 4px);
+    font-size: $latestTaskLineHeight * 0.5;
+    color: #555;
+    border-color: #3a3a3a;
+    background: #333;
+  }
+  
+  .task-reward {
+    background: #333;
+    color: #555;
+    border-color: #3a3a3a;
+    height: $latestTaskLineHeight;
+    width: $latestTaskLineHeight;
+    line-height: ($latestTaskLineHeight - 2 * 8px);
+    font-size: $latestTaskLineHeight * 0.5;
+  }
+}
+
+.task-grid {
+  display: -webkit-flex;
+  -webkit-box-lines: multiple;
+  -webkit-flex-wrap: wrap;
+  
+  .task {
+    width: 100px;
+    height: 100px;
+    background: #ddd;
+  }
+}

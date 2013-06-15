@@ -1,0 +1,47 @@
+div ng-controller="MainCtrl"
+  .modal modal="completionModal"
+    .modal-title Complete a Task
+    .modal-footer
+      a.btn Cancel
+      a.btn I did it!
+
+  .modal modal="moreTasksModal"
+    .modal-title
+    .modal-body
+      .task-grid      
+        div ng-repeat="task in [1,2,3,4,5,6,7,8,9]"
+          div HALLO
+      
+  .page
+    .statusbar
+      .statusbar-time 00:00
+
+    .scoreboard
+  
+    .tasks.tasks-upcoming
+      div
+        a.task ng-click="onComplete(task)" ng-repeat="task in [1,2,3]"
+          .task-icon: i.icon-trash
+          .task-text Mülleimer rausbringen
+          .task-reward 10
+      a.more-tasks ng-click="onMoreTasks()" Weitere Aufgaben
+
+    .task-headline Kürzlich erledigt
+  
+    .tasks.tasks-latest
+      a.task
+        .task-icon: i.icon-flag
+        .task-text Waschbecken und Spiegel
+        .task-author
+          span.by von
+          '
+          span Marcel
+        .task-reward 30
+      a.task
+        .task-icon: i.icon-star
+        .task-text Fremd abgewaschen
+        .task-author
+          span.by von
+          '
+          span Marcel
+        .task-reward 30
