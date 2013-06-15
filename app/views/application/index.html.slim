@@ -1,9 +1,10 @@
 div ng-controller="MainCtrl"
   .modal modal="completionModal"
     .modal-title Complete a Task
+    .modal-body
     .modal-footer
-      a.btn Cancel
-      a.btn I did it!
+      a Cancel
+      a I did it!
 
   .modal modal="moreTasksModal"
     .modal-title
@@ -20,7 +21,7 @@ div ng-controller="MainCtrl"
   
     .tasks.tasks-upcoming
       div
-        a.task ng-click="onComplete(task)" ng-repeat="task in [1,2,3]"
+        a.task ng-click="onComplete(task)" ng-repeat="task in [1,2]"
           .task-icon: i.icon-trash
           .task-text Mülleimer rausbringen
           .task-reward 10
