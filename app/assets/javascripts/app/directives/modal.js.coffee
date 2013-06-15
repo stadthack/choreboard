@@ -18,7 +18,7 @@
           $element.on "hidden", ->
             toDo = -> ngModel.$setViewValue false
             
-            if $scope.$root.$$phase
+            if scope.$root.$$phase
               toDo()
             else
               scope.$apply toDo

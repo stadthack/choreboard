@@ -1,9 +1,9 @@
 div ng-controller="MainCtrl"
-  .modal modal=true  ng-model="completionModal"
+  .modal modal=true ng-model="completionModal"
     .modal-title Complete a Task
     .modal-body
       .task-detail-reward
-        .task-reward 10
+        .task-reward ng-bind="selectedTask.points"
       .task-detail-author
         a Who
       .task-detail-date

@@ -15,7 +15,7 @@ app.controller "MainCtrl", @MainCtrl = ($scope, $http, $route, $routeParams, $lo
   ]
   
   $scope.scores = [
-    { label: "Marcel", value: 20 }
+    { label: "Marcel", value: 5 }
     { label: "Colin", value: 40 }
     { label: "Moritz", value: 30 }
   ]
@@ -31,10 +31,10 @@ app.controller "MainCtrl", @MainCtrl = ($scope, $http, $route, $routeParams, $lo
     not form.$invalid
     
   $scope.onCompleteTask = (task) ->
-    console.log = "wat"
     index = $scope.tasks.indexOf task
     $scope.tasks.splice index, 1 if index >= 0
     task.authors = ["Marcel"]
+    $scope.scores[0].value += task.points
     $scope.latestTasks.push task
     $scope.completionModal = false
 
@@ -46,6 +46,10 @@ app.controller "MainCtrl", @MainCtrl = ($scope, $http, $route, $routeParams, $lo
     $scope.moreTasksModal = true
     
   $scope.onRejectTask = (task) ->
+    $scope.scores.forEach (score) ->
+      if task.authors.indexOf(score.label) >= 0
+        score.value -= task.points
+    
     delete task.authors
     index = $scope.latestTasks.indexOf task
     $scope.latestTasks.splice index, 1 if index >= 0

@@ -137,6 +137,16 @@ a {
       fill: $brand;
       shape-rendering: crispEdges;
     }
+    
+    text {
+      font-size: 24px;
+      opacity: 0.5;
+      
+      &.low {
+        opacity: 1;
+        fill: #fff;
+      }
+    }
   }
 }
 
