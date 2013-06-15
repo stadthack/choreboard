@@ -1,19 +1,27 @@
 @app.directive 'modal', ($document, $parse) ->
   return {
     scope: false
-    link: (scope, element, attr) ->
+    require: '^ngModel'
+    link: (scope, element, attr, ngModel) ->
       $element = $(element)
       modal = null
 
-      scope.$watch attr.modal, (active) ->
+      ngModel.$render = ->
+        active = ngModel.$viewValue
+        
         if modal?
           action = if active then "show" else "hide"
           $element.modal action
         else if active
           $element.modal()
+          
           $element.on "hidden", ->
-            scope.$apply ->
-              scope.$emit "modalClosed"
+            toDo = -> ngModel.$setViewValue false
+            
+            if $scope.$root.$$phase
+              toDo()
+            else
+              scope.$apply toDo
             
           modal = $element.data "modal"
         else
