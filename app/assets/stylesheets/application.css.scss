@@ -22,6 +22,29 @@ $brand: #cd3;
 
 @import "bootstrap";
 
+@mixin avatar {
+  background: #000;
+  border-radius: 100%;
+  width: 24vh;
+  height: 24vh;
+  border: 10px solid $brand;
+  box-sizing: border-box;
+}
+
+@mixin flex-container {
+  display: -webkit-flex;
+}
+
+@mixin flex-horizontal {
+  @include flex-container;
+  -webkit-flex-direction: row;
+}
+
+@mixin flex-vertical {
+  @include flex-container;
+  -webkit-flex-direction: column;
+}
+
 html, body, .page {
   height: 100vh;
 }
@@ -29,7 +52,7 @@ html, body, .page {
 body {
   background: #000 url(/images/type.png);
 
-  -webkit-user-select: none;
+  // -webkit-user-select: none;
   cursor: default;
 }
 
@@ -50,6 +73,11 @@ a {
     background: -webkit-linear-gradient(top, $alternativeTextColor, $brand 10%);
     color: #000;
   }
+  
+  &:focus {
+    color: #eef;
+    outline: 4px solid #eef; 
+  }
 }
 
 .modal {
@@ -67,11 +95,15 @@ a {
 
   display: -webkit-flex;
   -webkit-flex-direction: column;
+  border-radius: 1vh;
 }
 
 .modal-title {
-  background: rgba(255,255,255,0.05);
-  color: #fff;
+  background: $brand;
+  color: $alternativeTextColor;
+  text-align: center;
+  border: 0 none;
+  border-radius: 1vh 1vh 0 0;
 }
 
 .modal-body {
@@ -79,42 +111,14 @@ a {
   max-height:none;
   display: -webkit-flex;
   -webkit-flex-direction: column;
-
-  .task-detail-reward {
-    -webkit-flex:1;
-  }
-  
-  .task-detail-author {
-    border-top: 0 none;
-    box-shadow: none;
-    padding: 0;
-    background: rgba(255,255,255,0.05);
-    display: -webkit-flex;
-    -webkit-flex-direction: row;
-    text-align: left;
-    a {
-      -webkit-flex:1;
-    }
-  }
-  .task-detail-date {
-    border-top: 0 none; 
-    box-shadow: none;
-    padding: 0;
-    background: rgba(255,255,255,0.05);
-    display: -webkit-flex;
-    -webkit-flex-direction: row;
-    text-align: left;
-    a {
-      -webkit-flex:1;
-    }
-  }
-
 }
+
 .modal-footer {
   border-top: 0 none;
   box-shadow: none;
   padding: 0;
   background: rgba(255,255,255,0.05);
+  border-radius: 0 0 1vh 1vh;
   display: -webkit-flex;
   -webkit-flex-direction: row;
   text-align: center;
@@ -123,12 +127,223 @@ a {
    }
 }
 
-.scoreboard {
+.page-visual {
   background: #222;
   background-image: -webkit-linear-gradient(bottom, rgba(0,0,0,0.5), rgba(0,0,0,0) 25%), url(/images/dark_wood.png);
   -webkit-flex: 0 0 25%;
   border-bottom: 1px solid #444;
+  position: relative;
+}
+
+@-webkit-keyframes challenge {
+	0%   { background-position: 0 33vh; }
+	100% { background-position: 0 0; }
+}
+
+.challenge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  
+  background-image: -webkit-linear-gradient(88deg, $brand 10%, $alternativeTextColor 40%, $alternativeTextColor 60%, $brand 90%);
+  background-size: 100vw 33vh;
+  
+	-webkit-animation-name: challenge;
+	-webkit-animation-duration: 0.2s;
+	-webkit-transform-origin: 50% 50%;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+  
+  -webkit-transition: 250ms ease opacity;
+  
+  .left, .right {
+    position: absolute;
+    opacity: 1;
+  }
+  
+  .lines {
+    position: absolute;
+    top: 50%;
+    width: 100vw;
+    -webkit-transform: rotate(-15deg);
+  }
+  
+  .line1, .line2 {
+    position: absolute;
+    top: 0;
+    height: 3vh;
+    background: $brand;
+    left: 0;
+    width: 100vw;
+  }
+  
+  .line1 {
+    height: 4.5vh;
+    margin-top: -3vh;
+    -webkit-transition: 80ms linear left, right;
+  }
+  
+  .line2 {
+    background: $alternativeTextColor;
+    margin-top: 0;
+    -webkit-transition: 80ms 60ms linear left, right;
+  }
+  
+  .versus {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -2vh;
+    margin-left: -15vw;
+    width: 30vw;
+    line-height: 4vh;
+    text-align: center;
+    color: #000;
+    font-size: 64px;
+  }
+  
+  .left {
+    left: -2vw;
+    bottom: -2vh;
+    -webkit-transition: 500ms ease-out all;
+    
+    img {
+      -webkit-transform: rotate(15deg);
+      margin-right: -8vh;
+    }
+  }
+  
+  .right {
+    right: -2vw;
+    top: -2vh;
+    -webkit-transition: 500ms ease-out all;
+    text-align: right;
+    
+    img {
+      -webkit-transform: rotate(-15deg);
+      margin-left: -8vh;
+      border-color: $alternativeTextColor;
+    }
+  }
+  
+  img {
+    @include avatar;
+    position: relative;
+    -webkit-transition: 500ms ease-out all;
+    
+    &:first-child {
+      z-index: 1; 
+    }
+  }
+}
+
+.challenge-hide-active {
+  opacity: 0;
+}
+
+.challenge-show {
+  opacity: 0;
+  
+  &.challenge-show-enter {
+    opacity: 1;
+  }
+  
+  .line1 {
+    left: -100vw;
+  }
+  
+  .line2 {
+    left: 100vw;
+  }
+  
+  .left, .right {
+    img {
+      -webkit-transform: rotate(0);
+    }
+  }
+  
+  .left {
+    left: -25vw;
+    bottom: -15vh;
+  }
+  
+  .right {
+    right: -25vw;
+    top: -15vh;
+  }
+}
+
+.sunburst {
+  position: relative;
+  overflow: hidden;
+  height: 30vh;
+  
+  canvas {
+    display: block;
+    width: 100%;
+    background: $brand;
+  }
+  
+  img {
+    @include avatar;
+    position: absolute;
+    bottom: -10%;
+    margin-left: -12vh;
+    left: 50%;
+  }
+}
+
+.sunburst2 {
+  width: 100vw;
+  height: 300px;
+  overflow: hidden;
+  background: #97102c;
+  
+  .outer {
+    width: 1000px;
+    height: 1000px;
+    -webkit-animation-name: rotate1;
+    -webkit-animation-duration:2s;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-timing-function:linear;
+    -moz-animation-name: rotate1;
+    -moz-animation-duration:2s;
+    -moz-animation-iteration-count:infinite;
+    -moz-animation-timing-function:linear;
+  }
+  
+  $sx: 45px;
+  
+  b {
+    display: block;
+    width: 0;
+    height: 0;
+    border-width: (2 * $sx) 100vw;
+    margin: (-4 * $sx) (-50vw) 0 0;
+    border-color: transparent #bf193c;
+    border-style: solid;
+  }
+  
+  b:nth-child(1) { -webkit-transform:rotate(20deg);  -moz-transform:rotate(20deg);  }
+  b:nth-child(2) { -webkit-transform:rotate(40deg);  -moz-transform:rotate(40deg);  }
+  b:nth-child(3) { -webkit-transform:rotate(60deg);  -moz-transform:rotate(60deg);  }
+  b:nth-child(4) { -webkit-transform:rotate(80deg);  -moz-transform:rotate(80deg);  }
+  b:nth-child(5) { -webkit-transform:rotate(100deg); -moz-transform:rotate(100deg); }
+  b:nth-child(6) { -webkit-transform:rotate(120deg); -moz-transform:rotate(120deg); }
+  b:nth-child(7) { -webkit-transform:rotate(140deg); -moz-transform:rotate(140deg); }
+  b:nth-child(8) { -webkit-transform:rotate(160deg); -moz-transform:rotate(160deg); }
+  b:nth-child(9) { -webkit-transform:rotate(180deg); -moz-transform:rotate(180deg); }
+}
+
+.scoreboard {
   text-align: center;
+  height: 30vh;
+  display: -webkit-flex;
+  -webkit-align-items: flex-end;
+  -webkit-justify-content: center;
   
   svg {
     vertical-align: top;
@@ -171,6 +386,10 @@ a {
   display: -webkit-flex;
   -webkit-flex-direction: column;
   -webkit-align-items: stretch;
+}
+
+.tasks-upcoming {
+  -webkit-flex: 3; 
 }
 
 .tasks .task {
@@ -223,8 +442,6 @@ a {
 }
 
 .task-author {
-  white-space: nowrap;
- 
   .by {
     opacity: 0.5;
     font-size: 32px;
@@ -254,6 +471,12 @@ a {
 
 }
 
+.task-meta {
+  color: #555;
+  padding: 0 2vw;
+  font-size: 24px;
+}
+
 .task-detail-reward {
   text-align: center;
 
@@ -268,24 +491,25 @@ a {
 
 .task-headline {
   display: block;
-  background: #fff;
   margin: 0 auto;
-  border-left: 5px solid $brand;
-  border-right: 5px solid $brand;
   text-align: center;
   line-height: 64px;
   white-space: nowrap;
-  background: $brand;
-  color: $alternativeTextColor;
+  background: #222;
+  font-size: $baseFontSize * 0.75;
 }
 
 .more-tasks {
   text-align: center;
-  box-shadow: 1px 1px #333, inset 1px 1px #333;
-  border-radius: $baseLineHeight;
-  border: 1px solid #111;
-  padding: 0 $baseLineHeight;
-  -webkit-align-self: center;
+  padding: 2vh 0;
+  
+  a {
+    box-shadow: 1px 1px #333, inset 1px 1px #333;
+    border-radius: $baseLineHeight;
+    border: 1px solid #111;
+    padding: 0 $baseLineHeight;
+    -webkit-align-self: center;
+  }
 }
 
 .tasks-latest {
@@ -318,13 +542,99 @@ a {
 }
 
 .task-grid {
+  -webkit-flex: 1;
+  
   display: -webkit-flex;
   -webkit-box-lines: multiple;
   -webkit-flex-wrap: wrap;
+  -webkit-justify-content: space-around;
+  -webkit-align-content: space-around;
   
   .task {
-    width: 100px;
-    height: 100px;
-    background: #ddd;
+    @include flex-vertical;
+    
+    width: 25vw;
+    background: rgba(255,255,255,0.1);
+    text-align: center;
+    padding: 2vw 2vh;
+    border-radius: 2vw;
+    
+    .task-cover {
+      -webkit-flex: 1;
+      padding-bottom: 2vh;
+    }
+    
+    .task-reward {
+      margin: 0 auto;
+      width: 100px;
+      height: 100px;
+      line-height: (100px - 2 * 8px);
+      font-size: 48px;
+    }
+    
+    .task-title {
+      font-size: 0.75 * $baseFontSize;
+      line-height: 1.1;
+    } 
   }
+}
+
+.task-detail-reward {
+  -webkit-flex:1;
+  display: -webkit-flex;
+  -webkit-justify-content: center;
+  -webkit-flex-direction: column;
+  -webkit-align-items: center;
+}
+
+.task-detail-author {
+  border-top: 0 none;
+  box-shadow: none;
+  padding: 0;
+  background: rgba(255,255,255,0.05);
+  @include flex-horizontal;
+}
+
+.task-detail-date {
+  border-top: 0 none; 
+  box-shadow: none;
+  padding: 0;
+  background: rgba(255,255,255,0.05);
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  text-align: left;
+  a {
+    -webkit-flex:1;
+  }
+}
+
+.task-participants {
+  -webkit-justify-content: center;
+}
+
+.task-participant {
+  @include flex-horizontal;
+  -webkit-justify-content: center;
+}
+
+@-webkit-keyframes shake {
+	0%   { -webkit-transform: translate(2px, 1px) rotate(0deg); }
+	10%  { -webkit-transform: translate(-1px, -2px) rotate(-1deg); }
+	20%  { -webkit-transform: translate(-3px, 0px) rotate(1deg); }
+	30%  { -webkit-transform: translate(0px, 2px) rotate(0deg); }
+	40%  { -webkit-transform: translate(1px, -1px) rotate(1deg); }
+	50%  { -webkit-transform: translate(-1px, 2px) rotate(-1deg); }
+	60%  { -webkit-transform: translate(-3px, 1px) rotate(0deg); }
+	70%  { -webkit-transform: translate(2px, 1px) rotate(-1deg); }
+	80%  { -webkit-transform: translate(-1px, -1px) rotate(1deg); }
+	90%  { -webkit-transform: translate(2px, 2px) rotate(0deg); }
+	100% { -webkit-transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.shake {
+	-webkit-animation-name: shake;
+	-webkit-animation-duration: 0.5s;
+	-webkit-transform-origin: 50% 50%;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
 }

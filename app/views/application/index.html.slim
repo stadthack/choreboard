@@ -1,46 +1,174 @@
 div ng-controller="MainCtrl"
+
+  .modal modal=true ng-model="moreTasksModal"
+    .modal-title Weitere Aufgaben
+    .modal-body
+      .task-grid      
+        a.task ng-repeat="task in moreTasks" ng-click="showCompleteTask(task)"
+          span.task-cover
+            span.task-reward ng-bind="task.points"
+          span.task-title ng-bind="task.title"
+    .modal-footer
+      a data-dismiss="modal" Schließen
+
   .modal modal=true ng-model="completionModal"
-    .modal-title Complete a Task
     .modal-body
       .task-detail-reward
         .task-reward ng-bind="selectedTask.points"
-      .task-detail-author
-        a Who
+        div ng-bind="selectedTask.title"
+      a.task-detail-author ng-click="onEditParticipants(selectedTask)"
+        span.control-label Wer?
+        span ng-bind="selectedTask.authors | join: ' + '"
       .task-detail-date
-        a When
+        div
+          span.control-label Wann?
     .modal-footer
-      a data-dismiss="modal" Cancel
-      a ng-click="onCompleteTask(selectedTask)" I did it!
-
-  .modal modal=true ng-model="moreTasksModal"
-    .modal-title
-    .modal-body
-      .task-grid      
-        div ng-repeat="task in [1,2,3,4,5,6,7,8,9]"
-          div HALLO
+      a data-dismiss="modal" Abbrechen
+      a data-default="modal" ng-click="onCompleteTask(selectedTask)" Erledigt!
+          
+  .modal modal=true ng-model="participantsModal"
+    .modal-title Wer hat mitgeholfen?
+    .modal-body.task-participants
+      label.task-participant ng-repeat="participant in participants"
+        input type="checkbox" ng-model="participant.checked" style="display:none"
+        div
+          i.icon-check ng-show="participant.checked"
+          i.icon-check-empty ng-hide="participant.checked"
+        span ng-bind="participant.label"
+    .modal-footer
+      a data-dismiss="modal" Abbrechen
+      a data-default="modal" ng-click="onParticipantsDone()" Okay
       
   .page
     .statusbar
-      .statusbar-time 00:00
+      .statusbar-time ng-bind="now | time"
 
-    .scoreboard scoreboard="scores"
+    .page-visual ng-click="tab = (tab + 1) % 2"
+      .scoreboard scoreboard="scores" ng-show="!tab"
+      .challenge ng-show="tab == 1 || action" ng-animate="'challenge'"
+        .lines
+          .line1
+          .line2
+          .versus VS
+        .left.shake
+          - # img src="https://lh6.googleusercontent.com/-_irlobFqF58/Tgz6YE2MwUI/AAAAAAAABbc/c29JVz3CZXk/s997-no/plus.png"
+          img src="https://secure.gravatar.com/avatar/96fe3e1b2a4c52d0954f2d6fb7d91216?s=512"
+        .right.shake
+          img src="https://secure.gravatar.com/avatar/20b6dc14c336afea468505d038ce69d1?s=512"
+      .sunburst ng-show="tab == 1"
+        canvas#sb
+        img src="https://secure.gravatar.com/avatar/96fe3e1b2a4c52d0954f2d6fb7d91216?s=512&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png"
+      
   
     .tasks.tasks-upcoming
       div
-        a.task ng-repeat="task in tasks" ng-click="showCompleteTask(task)"
+        a.task ng-repeat="task in tasks" ng-animate="'animate'" ng-click="showCompleteTask(task)"
           .task-icon: i.icon-trash
           .task-text ng-bind="task.title"
+          .task-meta ng-bind="task.meta" ng-show="task.meta"
           .task-reward ng-bind="task.points"
-      a.more-tasks ng-click="onMoreTasks()" Weitere Aufgaben
+          
+    .more-tasks: a ng-click="onMoreTasks()" Weitere Aufgaben
 
-    .task-headline Kürzlich erledigt
+    .task-headline ng-hide="latestTasks | isEmpty" Kürzlich erledigt
   
-    .tasks.tasks-latest
-      a.task ng-repeat="task in latestTasks" ng-click="onRejectTask(task)"
-        .task-icon: i.icon-flag
+    .tasks.tasks-latest ng-hide="latestTasks | isEmpty"
+      a.task ng-repeat="task in latestTasks | limitTo: 3" ng-animate="'animate'" ng-click="onRejectTask(task)"
+        .task-icon: i.icon-check
         .task-text ng-bind="task.title"
         .task-author
           span.by von
           '
           span ng-bind="task.authors | join:' + '"
         .task-reward ng-bind="task.points"
+
+
+javascript:
+
+  (function() {
+      var lastTime = 0;
+      var vendors = ['webkit', 'moz'];
+      for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+          window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+          window.cancelAnimationFrame =
+            window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+      }
+
+      if (!window.requestAnimationFrame)
+          window.requestAnimationFrame = function(callback, element) {
+              var currTime = new Date().getTime();
+              var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+              var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+                timeToCall);
+              lastTime = currTime + timeToCall;
+              return id;
+          };
+
+      if (!window.cancelAnimationFrame)
+          window.cancelAnimationFrame = function(id) {
+              clearTimeout(id);
+          };
+  }());
+
+  var rays = {
+     canvas: false,
+     context: false,
+     offset: 0,
+     color: '#fffff',
+     init: function(id, colour) {
+        this.canvas = document.getElementById(id);
+        this.context = this.canvas.getContext('2d');
+        this.color = colour;
+        window.requestAnimationFrame(rays.step);
+        this.draw();
+     },
+     step: function(dt) {
+       var rect = rays.canvas.getBoundingClientRect();
+       
+       if (rect.width != 0 && rect.height != 0) {
+       
+         if (rect.width != rays.canvas.width || rect.height != rays.canvas.height) {
+           rays.canvas.width = rect.width;
+           rays.canvas.height = rect.height;
+         }
+
+         rays.offset += 0.005;
+         rays.draw();
+         
+       }
+       
+       window.requestAnimationFrame(rays.step);
+     },
+     getXY: function(x, y, d, a){
+        return {
+           x: x + d * Math.cos(a),
+           y: y + d * Math.sin(a)
+        };
+     },
+     draw: function(){
+        c = this.canvas;
+        this.context.clearRect(0, 0, c.width, c.height);
+        this.context.fillStyle = this.color;
+        length = Math.max(c.width, c.height);
+        midx = c.width / 2, midy = c.height / 2;
+ 
+        var d = 12;
+        for(i = 0;i < d;i++){
+           angle = (Math.PI * 2 / d) * i + this.offset;
+           this.context.moveTo(midx, midy);
+           c1 = this.getXY(midx, midy, length, angle + d / 100);
+           this.context.lineTo(c1.x, c1.y);
+           c2 = this.getXY(midx, midy, length, angle - d / 100);
+           this.context.lineTo(c2.x, c2.y);
+           this.context.lineTo(midx, midy);
+           this.context.fill();
+        };
+      
+        this.context.beginPath();
+        this.context.arc(midx, midy, Math.max(c.width, c.height) / 200, 0, Math.PI * 2, true);
+        this.context.closePath();
+        this.context.fill();
+     }
+  };
+  
+  rays.init('sb', '#448833');
